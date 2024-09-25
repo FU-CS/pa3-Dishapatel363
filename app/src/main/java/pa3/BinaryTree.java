@@ -18,7 +18,18 @@ public class BinaryTree {
      * Constructs an empty binary tree.
      */
     public BinaryTree() {
+        root = null; 
+    }
+    public static class Node {
+        public int value; 
+        public Node left; 
+        public Node right; 
         
+        public Node(int value){
+            this.value = value;
+            this.left = null; 
+            this.right = null; 
+        }
     }
 
     /**
@@ -34,15 +45,37 @@ public class BinaryTree {
      * @return the level order traversal of the tree.
      */
     public String levelOrderTraversal() {
-        
+        if (root == null){
+            return "";
+        }
+
+        Queue queue = new Queue();
+        queue.enqueue(root);
+        String result = "";
+        return levelOrderTraversalHelper(root, result);
+        //return levelOrderTraversalHelper(root, null); 
     }
 
     /** 
      * Helper method for levelOrderTraversal that takes a node as an argument.
      */
     private String levelOrderTraversalHelper(Node node, String result) {
-        
+        Queue queue = new Queue();
+        queue.enqueue(node);
 
+        while (!queue.isEmpty()){
+            Node current = queue.dequeue();
+            
+            result += current.value + " ";
+
+            if (current.left != null){
+                queue.enqueue(current.left);
+            }
+            if (current.right != null){
+                queue.enqueue(current.right);
+            }
+        }
+        return result; 
     }
 
     /**
@@ -55,10 +88,35 @@ public class BinaryTree {
      * @param value the value to add to the tree.
      */
     public void add(int value) {
+        Node newNode = new Node(value);
+        if (root == null){
+            root = newNode;
+            return;
+        }
+        Queue queue = new Queue();
+        queue.enqueue(root);
 
+        // Traverse the tree level by level to find the first null child
+        while (!queue.isEmpty()) {
+            Node current = queue.dequeue();
 
+            // Check the left child
+            if (current.left == null) {
+                current.left = newNode; // Add the new node as the left child
+                return;
+            } else {
+                queue.enqueue(current.left); // Enqueue the left child for further traversal
+            }
+
+            // Check the right child
+            if (current.right == null) {
+                current.right = newNode; // Add the new node as the right child
+                return;
+            } else {
+                queue.enqueue(current.right);
+            }
+        }
     }
-
     /** 
      * Inverts the tree: left and right children of each node are swapped.
      * 
@@ -78,20 +136,38 @@ public class BinaryTree {
      * 
      */
     public void invert() {
+       root = invertHelper(root);
+    }
 
-       
+    private Node invertHelper(Node node){
+        if (node == null){
+            return null; 
+        }
+        Node left = invertHelper(node.left);
+        Node right = invertHelper(node.right);
+
+        node.left = right; 
+        node.right = left;
+
+        return node;
     }
 
     public int getHeight() {
-        
+        return getHeightHelper(root);
     }
 
     /** Counts the height of the tree 
      *  Height is defined as the number of edges in the longest path from the root to a leaf node. 
      */
     private int getHeightHelper(Node node) {
-
+        if (node == null){
+            return -1; 
+        }   
         
+        int leftHeight = getHeightHelper(node.left);
+        int rightHeight = getHeightHelper(node.right);
+
+        return Math.max(leftHeight, rightHeight) +1; 
     }
 
     public static void main(String[] args) {
