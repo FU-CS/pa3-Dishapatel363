@@ -9,8 +9,10 @@ public class QueueTest {
     @Test
     public void testEnqueue() {
         Queue queue = new Queue();
-        Node node1 = new Node(4);
-        Node node2 = new Node(5);
+        //i dont know but it was giving me error and debugging suggested that since node is nested inside BinaryTree
+        //so i have to change every mention of Node to BinaryTree.Node (still have question on this)
+        BinaryTree.Node node1 = new BinaryTree.Node(4);
+        BinaryTree.Node node2 = new BinaryTree.Node(5);
         queue.enqueue(node1);
         queue.enqueue(node2);
         assertEquals(node1, queue.dequeue());
